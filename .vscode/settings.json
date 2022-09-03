@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "Makefile*": "makefile",
+        "iostream": "cpp",
+        "complex": "cpp"
+    }
+}
