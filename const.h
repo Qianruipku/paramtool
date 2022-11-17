@@ -19,12 +19,4 @@ constexpr double au2s = hbar/Ry2eV/qe; //4.837771834548454e-17
 
 constexpr double eV2K = qe/kB;  //11604.518026
 
-//element
-const double ele_H = 1.00794;
-const double ele_D = 2.01410;
-const double ele_T = 3.016;
-const double ele_Si = 28.0855;
-const double ele_C = 12.011;
-const double ele_Al = 26.981539;
-
 #endif

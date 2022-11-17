@@ -4,6 +4,7 @@ OBJ=obj/main.o\
 	obj/convert.o\
 	obj/function.o\
 	obj/mdpara.o\
+	obj/elements.o\
 	obj/tool.o
 
 tool.exe:$(OBJ)
