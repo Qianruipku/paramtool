@@ -12,33 +12,35 @@ double funmu(double e, double mu, double T);
 double getEcut(double mu, double T);
 void FUNC::mdparameter()
 {
-	int na;
+	double na, nmol;
 	double density;
-	double z_tot;
+	double z_per_mol;
 	string name;
-	double mass;
+	double mass_per_mol, n_per_mol, min_mass;
 	double temp;
 	cout<<green("Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)")<<endl;
 	cin>>name;
-	if(!readstring(name, mass, z_tot))	exit(0);
+	if(!readstring(name, mass_per_mol, z_per_mol, n_per_mol, min_mass))	exit(0);
+	// cout<<name<<" "<<mass_per_mol<<" "<<z_per_mol<<" "<<n_per_mol<<" "<<min_mass<<endl;
 	cout<<green("Input the number of molecules:")<<endl;
-	cin>>na;
+	cin>>nmol;
+	na = n_per_mol * nmol;
 	cout<<green("Input the density (g/cm^3):")<<endl;
     cin>>density;
 	cout<<green("Input the temperature (eV):")<<endl;
     cin>>temp;
 
-	double mass_atom_g = mass/NA;
+	double mass_atom_g = mass_per_mol/NA/n_per_mol;
 	double l_ang=pow(na*mass_atom_g/density,1.00/3)*1e8;
 	double l_bohr=l_ang/bohr;
 	double WSr_ang=pow(mass_atom_g/density*3/4/M_PI,1.00/3)*1e8;
 	double WSr_bohr=WSr_ang/bohr;
-	double dt_fs=WSr_ang*1e-10/NT/sqrt(temp*qe/(0.001*mass_atom_g))*1e15;
+	double dt_fs=WSr_ang*1e-10/NT/sqrt(temp*qe/(0.001*min_mass))*1e15;
 	double dt_au=dt_fs/(au2s*1e15);
 	//mu of free electrons, assume all electrons are ionized.
 	//mu0=hbar^2/2m*(3pi^2N/V)^(2/3)
 	//mu = mu0(1 - pi^2/12*(kT/mu0)^2) (mu/T >> 1)
-	double mu0_Ry = pow(3.0 * pow(M_PI,2) * na*z_tot/pow(l_bohr,3), 2.0/3.0); //unit in Ry
+	double mu0_Ry = pow(3.0 * pow(M_PI,2) * nmol*z_per_mol/pow(l_bohr,3), 2.0/3.0); //unit in Ry
 	double mu_eV,mu_Ry;
 	if(temp < 1)
 	{
