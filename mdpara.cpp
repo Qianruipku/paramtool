@@ -21,7 +21,6 @@ void FUNC::mdparameter()
 	cout<<green("Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)")<<endl;
 	cin>>name;
 	if(!readstring(name, mass, z_tot))	exit(0);
-	cout<<mass<<" "<<z_tot<<endl;
 	cout<<green("Input the number of molecules:")<<endl;
 	cin>>na;
 	cout<<green("Input the density (g/cm^3):")<<endl;
