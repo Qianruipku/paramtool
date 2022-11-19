@@ -4,20 +4,32 @@
 
 string red(string txt)
 {
+#ifdef __COLOR
 	string out = "\033[31m"+txt+"\033[0m";
 	return out;
+#else  
+    return txt;
+#endif
 }
 
 string green(string txt)
 {
+#ifdef __COLOR
 	string out = "\033[32m"+txt+"\033[0m";
 	return out;
+#else  
+    return txt;
+#endif
 }
 
 string yellow(string txt)
 {
+#ifdef __COLOR
 	string out = "\033[33m"+txt+"\033[0m";
 	return out;
+#else  
+    return txt;
+#endif
 }
 
 int str2int(const string str)

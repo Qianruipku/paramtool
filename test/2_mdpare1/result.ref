@@ -1,0 +1,18 @@
+Please choose the tool 
+1: Unit convert
+2: calculate MD parameter
+3: Unit convert
+Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)
+Input the number of molecules:
+Input the density (g/cm^3):
+Input the temperature (eV):
+---------------------------------------------------------
+Lattice constant: 24.35843485 P_bohr; 12.88992861 Angstrom
+Wigner-Seitz radius: 2.99835593 P_bohr;  (0.7*WS = 2.09884915)
+Temperature: 1469.97384159 Ry; 232090108.36558563 K
+dt: 5909009986.54247093 fs; 122143213624.58390808 a.u.
+1/(40dt): 0.00000000 fs^-1
+FEG mu: -205202.597 eV; -15082.122 Ry
+Guess Ecut1 (interror < 1e-3): 162664.000 eV; 11955.591 Ry
+Guess Ecut2 (f<1e-5):          25055.912 eV; 1841.577 Ry
+---------------------------------------------------------

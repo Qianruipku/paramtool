@@ -2,7 +2,7 @@
 #define ELEMENTS_H
 
 #include <string>
-
+#include <vector>
 using namespace std;
 
 #define MASS_H   1.00794
@@ -96,5 +96,5 @@ using namespace std;
 #define MASS_Ra  226
 
 
-bool readstring(const string txt, double & mass, double & q_tot, double& n_tot, double &mass_min);
+void readstring(const string name, vector<double> &mlist, vector<double> &qlist, vector<double> &nlist);
 #endif

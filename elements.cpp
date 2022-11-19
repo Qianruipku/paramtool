@@ -4,30 +4,30 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
 void Stringsplit(const string& str, const char split, vector<string>& res);
 void get_masscharge(const string in, double &mass, double &charge);
 
 
-bool readstring(const string txt, double & mass, double & q_tot, double &n_tot, double &mass_min)
+void readstring(const string name, vector<double> &mlist, vector<double> &qlist, vector<double> &nlist)
 {
+	mlist.clear();
+	qlist.clear();
+	nlist.clear();
     vector<string> list;
-    Stringsplit(txt, '-', list);
+    Stringsplit(name, '-', list);
     if(list.size() == 0)
     {
         cout<<red("No information")<<endl;
-        return false;
+        exit(0);
     }
     double tmpmass, tmpchg;
-    mass = q_tot = n_tot = 0.0;
-	mass_min = 1e5;
     for(vector<string>::iterator it = list.begin(); it != list.end() ;++it)
     {
         double tmpit = str2dou(*it);
         if(tmpit > 1e-6)
         {
             cout<<red("Wrong format!")<<endl;
-            return false;
+            exit(0);
         }
         get_masscharge(*it, tmpmass, tmpchg);
         double count = 1.0;
@@ -42,12 +42,11 @@ bool readstring(const string txt, double & mass, double & q_tot, double &n_tot, 
         }
         else
             --it;
-		mass_min = mass_min > tmpmass ? tmpmass : mass_min;
-        mass += count * tmpmass;
-        q_tot += count * tmpchg;
-		n_tot += count;
+		mlist.push_back(tmpmass);
+		qlist.push_back(tmpchg);
+		nlist.push_back(count);
+		// cout<<tmpmass<<" "<<tmpchg<<" "<<count<<endl;
     }
-    return true;
 }
 
 void Stringsplit(const string& str, const char split, vector<string>& res)
