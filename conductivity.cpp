@@ -8,20 +8,40 @@ double fd_integral(const double x, const double j);
 
 void FUNC::conductivity()
 {
-    vector<double> mlist, qlist, nlist;
-	read_elemets(mlist, qlist, nlist);
-    double density = read_density();
-	double temperature = read_temperature();
+    vector<double> mlist, zlist, nlist, denlist_i;
+	read_elemets(mlist, zlist, nlist);
+    double rho_i = read_density(); //g/cm3
+	double T_eV = read_temperature();
+    //--------------------------------------------------------
+    double z_per_mol(0), mass_per_mol(0), n_per_mol(0);
+	for(int i = 0 ; i < nlist.size(); ++i)
+	{
+        mass_per_mol += nlist[i] * mlist[i];
+        z_per_mol += nlist[i] * zlist[i];
+		n_per_mol += nlist[i];
+	}
+    double z_avg = z_per_mol / n_per_mol;
+    double molden = rho_i / mass_per_mol * P_NA * n_per_mol; //unit: cm^-3
+    for(int i = 0 ; i < nlist.size(); ++i)
+	{
+        denlist_i.push_back(molden * nlist[i] / n_per_mol); //unit: cm^-3
+    }
+    double density_e = molden * z_avg; //unit cm^-3
+    double mu_eV = FEG_mu(density_e, T_eV);
+
+    //--------------------------------------------------------
+    lee_more(T_eV, mu_eV, density_e, denlist_i, zlist);
     
 }
 
-void lee_more(const double T_eV, const double mu_eV, const double density_e, const double density_i, const double z_val)
+//density_e: cm^-3; denlist_i: cm^-3
+void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density_e, const vector<double>& denlist_i, const vector<double>& zlist)
 {
-    double kT = T_eV;
-    double kTf = mu_eV;
-    double mu_kT = mu_eV;
-    // double density_e , density_i;
-    // double z_val;
+    // Hartree atomic unit
+    double kT = T_eV / Ha2eV;
+    double kTf = mu_eV / Ha2eV;
+    double mu_kT = mu_eV / T_eV;
+    double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
     //----------------------------------
     double F1_2 = fd_integral(mu_kT, 1.0/2.0);
     double F2 = fd_integral(mu_kT, 2.0);
@@ -31,14 +51,27 @@ void lee_more(const double T_eV, const double mu_eV, const double density_e, con
     double beta = 20.0/9.0 * F4 * (1 - 16.0*pow(F3, 2)/(15.0*F4*F2))/((1+exp(-mu_kT))*pow(F1_2,2));
     //----------------------------------
     double bmax,bmin;
-    double Debye = 4*M_PI*density_e * P_qe * P_qe / sqrt(pow(kT,2) + pow(kTf,2)) + 4*M_PI*density_i*pow(P_qe*z_val ,2) / kT;
+    double Debye = 4*M_PI* density_e_au/ sqrt(pow(kT,2) + pow(kTf,2));
+    bmin = M_PI/sqrt(3*kT);
+    double tau_frac = 0;
+    for(int i = 0 ; i < denlist_i.size(); ++i)
+    {
+        double density_i_au = denlist_i[i] * pow(P_bohr*1e-8, 3);
+        Debye += 4*M_PI* density_i_au *pow(zlist[i] ,2) / kT;
+        bmin = max(zlist[i]/(3*kT), bmin);
+        tau_frac += 1.0/(pow(zlist[i],2) * density_i_au);
+    }
     bmax = sqrt(1.0/Debye);
-    bmin = max(z_val * P_qe*P_qe/(3*kT), P_hbar*2*M_PI/2/sqrt(3*P_Me*kT));
     double cou_log = 1.0/2.0 * log(1.0 + pow(bmax/bmin, 2));
-    double tau = 3.0*sqrt(P_Me)*pow(kT,3.0/2.0)/(2.0*sqrt(2.0)*M_PI*pow(z_val,2)*density_i*pow(P_qe,4)*cou_log)*(1+exp(-mu_kT))*F1_2;
+    double tau = tau_frac * 3.0 * pow(kT,3.0/2.0)/(2.0*sqrt(2.0)*M_PI*cou_log)*(1+exp(-mu_kT))*F1_2;
     //----------------------------------
-    double sigma = density_e*pow(P_qe,2)*tau/P_Me * alpha * mu_kT;
-    double kappa = density_e*P_kB*kT*tau/P_Me * beta * mu_kT;
+    double sigma_au = density_e * tau * alpha;
+    double kappa_au = density_e * kT * tau * beta;
+    //----------------------------------
+    const double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
+    const double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
+    double sigma = sigma * au2si_sigma;
+    double kappa = kappa_au * au2si_kappa;
     cout<<"Lee-More:"<<endl;
     cout<<"electrical conductivity: "<<sigma<<yellow(" S m^-1")<<endl;
     cout<<"thermal conductivity: "<<kappa<<yellow(" W (mK)^-1")<<endl;

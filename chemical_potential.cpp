@@ -7,9 +7,11 @@ double funmu(double e, double mu, double T);
 //mu of free electrons, assume all electrons are ionized.
 //mu0=P_hbar^2/2m*(3pi^2N/V)^(2/3)
 //mu = mu0(1 - pi^2/12*(kT/mu0)^2) (mu/T >> 1)
-double FUNC:: FEG_mu(const double V_bohr, const double Ne, const double T_eV)
+//density_e: cm^-3  ; T_eV: eV
+double FUNC:: FEG_mu(const double density_e, const double T_eV)
 {
-    double mu0_eV = pow(3.0 * pow(M_PI,2) * Ne /V_bohr, 2.0/3.0) * Ry2eV; //unit in Ry
+	double density_e_bohr = density_e*pow(P_bohr*1e-8, 3);
+    double mu0_eV = pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV; //unit in Ry
     double mu_eV;
     if(T_eV <= 1)
 	{

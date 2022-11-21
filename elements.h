@@ -96,5 +96,5 @@ using namespace std;
 #define MASS_Ra  226
 
 
-void readstring(const string name, vector<double> &mlist, vector<double> &qlist, vector<double> &nlist);
+void readstring(const string name, vector<double> &mlist, vector<double> &zlist, vector<double> &nlist);
 #endif

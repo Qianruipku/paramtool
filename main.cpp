@@ -8,7 +8,7 @@ int main()
 	cout<<green("Please choose the tool ")<<endl;
 	cout<<green("1: Unit convert")<<endl;
 	cout<<green("2: calculate MD parameter")<<endl;
-	cout<<green("3: Unit convert")<<endl;
+	cout<<green("3: calculate conductivities")<<endl;
 	FUNC test;
 	cin>>func;
 	switch(func)

@@ -8,10 +8,10 @@ void Stringsplit(const string& str, const char split, vector<string>& res);
 void get_masscharge(const string in, double &mass, double &charge);
 
 
-void readstring(const string name, vector<double> &mlist, vector<double> &qlist, vector<double> &nlist)
+void readstring(const string name, vector<double> &mlist, vector<double> &zlist, vector<double> &nlist)
 {
 	mlist.clear();
-	qlist.clear();
+	zlist.clear();
 	nlist.clear();
     vector<string> list;
     Stringsplit(name, '-', list);
@@ -43,7 +43,7 @@ void readstring(const string name, vector<double> &mlist, vector<double> &qlist,
         else
             --it;
 		mlist.push_back(tmpmass);
-		qlist.push_back(tmpchg);
+		zlist.push_back(tmpchg);
 		nlist.push_back(count);
 		// cout<<tmpmass<<" "<<tmpchg<<" "<<count<<endl;
     }
