@@ -101,7 +101,7 @@ double calint(double fun(double e, double mu, double T), double mu, double T, do
 	double sum = fun(0, mu, T);
 	double e = 0;
 	int i = 0;
-	while(result > thr)
+	while(result > thr || e <= T)
 	{
 		e += de;
 		sum += 4 * fun(e, mu, T);
