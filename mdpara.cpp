@@ -28,7 +28,7 @@ void FUNC::mdparameter()
 	double density = read_density();
 	double temp = read_temperature();
 
-	double mass_atom_g = mass_per_mol/P_NA/n_per_mol;
+	double mass_atom_g = mass_per_mol/P_NA/n_per_mol; //averge mass of each atom: g
 	double l_cm = pow(na*mass_atom_g/density,1.00/3);
 	double l_ang= l_cm * 1e8;
 	double l_bohr=l_ang/P_bohr;
