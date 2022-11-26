@@ -20,7 +20,7 @@ endif
 
 tool.exe:$(OBJ)
 	$(CC) $(OPTION) -o tool.exe $(OBJ)
-	@ cp tool.exe $(BIN_PATH)
+	@if [ $(TEST) == OFF ]; then cp tool.exe $(BIN_PATH); fi
 	@if [ $(TEST) == ON ]; then cd test;./Autotest.sh ;cd ..; fi
 obj/%.o:%.cpp
 	$(CC) $(OPTION) -c $< -o $@

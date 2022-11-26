@@ -28,8 +28,8 @@ void FUNC::conductivity()
     }
     double density_e = molden * z_avg; //unit cm^-3
     double mu_eV = FEG_mu(density_e, T_eV);
-    cout<<"density: "<<density_e<<yellow(" g/cm^3")<<" ; temperature: "<<T_eV<<yellow(" eV")<<endl;
-    cout<<"Fermi energy: "<<mu_eV<<yellow(" eV")<<" Tf/T = "<<mu_eV/T_eV<<endl;
+    cout<<"density: "<<density_e<<" "<<yellow("g/cm^3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
+    cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" Tf/T = "<<mu_eV/T_eV<<endl;
 
     //--------------------------------------------------------
     lee_more(T_eV, mu_eV, density_e, denlist_i, zlist);
@@ -101,8 +101,8 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     double sigma = sigma_au * au2si_sigma;
     double kappa = kappa_au * au2si_kappa;
     cout<<"Lee-More:"<<endl;
-    cout<<"electrical conductivity: "<<sigma<<yellow(" S m^-1")<<endl;
-    cout<<"thermal conductivity: "<<kappa<<yellow(" W (mK)^-1")<<endl;
+    cout<<"electrical conductivity: "<<sigma<<" "<<yellow("Sm^-1")<<endl;
+    cout<<"thermal conductivity: "<<kappa<<" "<<yellow("W(mK)^-1")<<endl;
 }
 
 double fd_integral(const double x, const double j)
