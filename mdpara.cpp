@@ -11,22 +11,23 @@ void FUNC::mdparameter()
 {
 	vector<double> mlist, zlist, nlist;
 	read_elemets(mlist, zlist, nlist);
+	double nmol = read_number_of_molecules();
+	double density = read_density();
+	double temp = read_temperature();
+
+	//----------------------------------------------------------
+	vector<double> zionlist = thomas_fermi_ionization(density, temp, mlist, zlist, nlist);
 	double z_per_mol(0), mass_per_mol(0), n_per_mol(0), min_mass(1e5);
 	for(int i = 0 ; i < nlist.size(); ++i)
 	{
 		min_mass = min_mass > mlist[i] ? mlist[i] : min_mass;
         mass_per_mol += nlist[i] * mlist[i];
-        z_per_mol += nlist[i] * zlist[i];
+        z_per_mol += nlist[i] * zionlist[i];
 		n_per_mol += nlist[i];
 	}
 	// cout<<" "<<mass_per_mol<<" "<<z_per_mol<<" "<<n_per_mol<<" "<<min_mass<<endl;
-	
-	double nmol = read_number_of_molecules();
 	double na = n_per_mol * nmol;
 	double ne = z_per_mol * nmol;
-
-	double density = read_density();
-	double temp = read_temperature();
 
 	double mass_atom_g = mass_per_mol/P_NA/n_per_mol; //averge mass of each atom: g
 	double l_cm = pow(na*mass_atom_g/density,1.00/3);

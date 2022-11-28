@@ -13,12 +13,14 @@ void FUNC::conductivity()
     double rho_i = read_density(); //g/cm3
 	double T_eV = read_temperature();
     //--------------------------------------------------------
+    vector<double> zionlist = thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist);
     double z_per_mol(0), mass_per_mol(0), n_per_mol(0);
 	for(int i = 0 ; i < nlist.size(); ++i)
 	{
         mass_per_mol += nlist[i] * mlist[i];
-        z_per_mol += nlist[i] * zlist[i];
+        z_per_mol += nlist[i] * zionlist[i];
 		n_per_mol += nlist[i];
+        cout<<"z_ion: "<<zionlist[i]<<endl;
 	}
     double z_avg = z_per_mol / n_per_mol;
     double molden = rho_i / mass_per_mol * P_NA * n_per_mol; //unit: cm^-3
@@ -32,12 +34,12 @@ void FUNC::conductivity()
     cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" Tf/T = "<<mu_eV/T_eV<<endl;
 
     //--------------------------------------------------------
-    lee_more(T_eV, mu_eV, density_e, denlist_i, zlist);
+    lee_more(T_eV, mu_eV, density_e, denlist_i, zionlist);
     
 }
 
 //density_e: cm^-3; denlist_i: cm^-3
-void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density_e, const vector<double>& denlist_i, const vector<double>& zlist)
+void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density_e, const vector<double>& denlist_i, const vector<double>& zionlist)
 {
     // Hartree atomic unit
     double kT = T_eV / Ha2eV;
@@ -83,9 +85,9 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     for(int i = 0 ; i < denlist_i.size(); ++i)
     {
         double density_i_au = denlist_i[i] * pow(P_bohr*1e-8, 3);
-        Debye += 4*M_PI* density_i_au *pow(zlist[i] ,2) / kT;
-        bmin = max(zlist[i]/(3*kT), bmin);
-        tau_frac += pow(zlist[i],2) * density_i_au;
+        Debye += 4*M_PI* density_i_au *pow(zionlist[i] ,2) / kT;
+        bmin = max(zionlist[i]/(3*kT), bmin);
+        tau_frac += pow(zionlist[i],2) * density_i_au;
         density_i_tot_au += density_i_au;
     }
     bmax = max(sqrt(1.0/Debye), pow(3.0/(4.0*M_PI*density_i_tot_au), 1.0/3.0));

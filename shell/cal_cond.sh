@@ -1,6 +1,6 @@
 #!/bin/bash
-ele=H
-density=2.0
+ele=al
+density=0.215
 allT=(1 2 3 4 6 8 12 16 25 32 50 64 100 128 200 256 384 512 750 1000)
 for T in ${allT[@]}
 do

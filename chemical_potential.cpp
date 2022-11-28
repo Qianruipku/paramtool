@@ -4,6 +4,47 @@ double getmu(double mu_0, double T);
 double calint(double fun(double e, double mu, double T), double mu, double T,double thr);
 double funmu(double e, double mu, double T);
 
+vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist, const vector<double> &zlist, const vector<double> &nlist)
+{
+	double alpha = 14.3139;
+    double beta = 0.6624;
+    double a1 = 0.003323;
+    double a2 = 0.9718;
+    double a3 = 9.26148e-5;
+    double a4 = 3.10165;
+    double b0 = -1.7630;
+    double b1 = 1.43175;
+    double b2 = 0.31546;
+    double c1 = -0.366667;
+    double c2 = 0.983333;
+
+	double m_per = 0, n_per_mol = 0;
+	for(int i = 0 ; i < nlist.size(); ++i)
+	{
+        m_per += nlist[i] * mlist[i];
+		n_per_mol += nlist[i];
+	}
+	m_per /= n_per_mol;
+
+	vector<double> zionlist;
+	for(int i = 0 ; i< nlist.size(); ++i)
+	{
+		double Z = zlist[i];
+		double T0 = T_eV / pow(Z, 4.0/3.0);
+    	double R = density_gm / (Z*m_per);
+    	double TF = T0 / (1 + T0);
+    	double A = a1*pow(T0, a2) + a3*pow(T0,a4);
+    	double B = -exp(b0 + b1*TF + b2*pow(TF,7));
+    	double C = c1*TF + c2;
+    	double Q1 = A * pow(R, B);
+    	double Q = pow((pow(R, C)+pow(Q1, C)), (1.0/C));
+    	double x = alpha * pow(Q, beta);
+		zionlist.push_back(Z * x / (1 + x + sqrt(1.0 + 2.0*x)));
+	}
+
+    return zionlist;
+}
+
 //mu of free electrons, assume all electrons are ionized.
 //mu0=P_hbar^2/2m*(3pi^2N/V)^(2/3)
 //mu = mu0(1 - pi^2/12*(kT/mu0)^2) (mu/T >> 1)
