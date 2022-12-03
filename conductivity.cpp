@@ -5,6 +5,8 @@
 #include "tool.h"
 
 double fd_integral(const double x, const double j);
+double getA_alpha(const double mu_kT);
+double getA_beta(const double mu_kT);
 
 void FUNC::conductivity()
 {
@@ -20,7 +22,7 @@ void FUNC::conductivity()
         mass_per_mol += nlist[i] * mlist[i];
         z_per_mol += nlist[i] * zionlist[i];
 		n_per_mol += nlist[i];
-        cout<<"z_ion: "<<zionlist[i]<<endl;
+        // cout<<"z_ion: "<<zionlist[i]<<endl;
 	}
     double z_avg = z_per_mol / n_per_mol;
     double molden = rho_i / mass_per_mol * P_NA * n_per_mol; //unit: cm^-3
@@ -43,7 +45,7 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
 {
     // Hartree atomic unit
     double kT = T_eV / Ha2eV;
-    double kTf = mu_eV / Ha2eV;
+    double kTf = fermi_energy(density_e) / Ha2eV;
     double mu_kT = mu_eV / T_eV;
     double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
     //----------------------------------
@@ -76,6 +78,9 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
         // cout<<F1_2<<" "<<F2<<" "<<F3<<" "<<F4<<endl;
         // cout<<alpha<<" "<<beta<<endl;
     }
+    //----Lee-more approximation--------
+    // alpha = getA_alpha(mu_kT);
+    // beta = getA_beta(mu_kT);
     //----------------------------------
     double bmax,bmin;
     double Debye = 4*M_PI* density_e_au/ sqrt(pow(kT,2) + pow(kTf,2));
@@ -90,7 +95,7 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
         tau_frac += pow(zionlist[i],2) * density_i_au;
         density_i_tot_au += density_i_au;
     }
-    bmax = max(sqrt(1.0/Debye), pow(3.0/(4.0*M_PI*density_i_tot_au), 1.0/3.0));
+    bmax = max(sqrt(1.0/Debye), 2*pow(3.0/(4.0*M_PI*density_i_tot_au), 1.0/3.0));
     double cou_log = 1.0/2.0 * log(1.0 + pow(bmax/bmin, 2));
     cou_log = max(cou_log,2.0);
     double tau = 1.0/tau_frac * 3.0 * pow(kT,3.0/2.0)/(2.0*sqrt(2.0)*M_PI*cou_log)*expmultiF12;
@@ -105,6 +110,7 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     cout<<"Lee-More:"<<endl;
     cout<<"electrical conductivity: "<<sigma<<" "<<yellow("Sm^-1")<<endl;
     cout<<"thermal conductivity: "<<kappa<<" "<<yellow("W(mK)^-1")<<endl;
+    cout<<"Lorenz number: "<<kappa_au/sigma_au/kT<<endl;
 }
 
 double fd_integral(const double x, const double j)
@@ -139,4 +145,28 @@ double fd_integral(const double x, const double j)
 	sum += func(e+de);
 	sum /= 3;
 	return sum * de;
+}
+
+double getA_alpha(const double mu_kT)
+{
+    double a1 = 3.39;
+    double a2 = 0.347;
+    double a3 = 0.129;
+    double b2 = 0.511;
+    double b3 = 0.124;
+    double y = log(1+exp(mu_kT));
+    
+    return (a1 + a2 * y + a3 * y * y)/(1 + b2*y + b3 * y * y);
+}
+
+double getA_beta(const double mu_kT)
+{
+    double a1 = 13.5;
+    double a2 = 0.976;
+    double a3 = 0.437;
+    double b2 = 0.510;
+    double b3 = 0.126;
+    double y = log(1+exp(mu_kT));
+    
+    return (a1 + a2 * y + a3 * y * y)/(1 + b2*y + b3 * y * y);
 }

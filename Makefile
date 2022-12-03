@@ -15,7 +15,7 @@ ifeq ($(TEST), ON)
     OPTION += -fsanitize=address -fno-omit-frame-pointer
     CC = g++
 else
-    OPTION += -D__COLOR
+    OPTION += -D__COLOR -O3
 endif
 
 tool.exe:$(OBJ)

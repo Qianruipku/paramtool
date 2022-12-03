@@ -35,7 +35,7 @@ void FUNC::mdparameter()
 	double l_bohr=l_ang/P_bohr;
 	double WSr_ang=pow(mass_atom_g/density*3/4/M_PI,1.00/3)*1e8;
 	double WSr_bohr=WSr_ang/P_bohr;
-	double dt_fs=WSr_ang*1e-10/NT/sqrt(temp*P_qe/(0.001*min_mass))*1e15;
+	double dt_fs=WSr_ang*1e-10/NT/sqrt(temp*P_qe/(0.001*min_mass/P_NA))*1e15;
 	double dt_au=dt_fs/(rau2s*1e15);
 	double mu_eV = FEG_mu(ne / pow(l_cm,3), temp);
 	double mu_Ry = mu_eV / Ry2eV;

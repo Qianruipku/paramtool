@@ -51,8 +51,7 @@ vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const doub
 //density_e: cm^-3  ; T_eV: eV
 double FUNC:: FEG_mu(const double density_e, const double T_eV)
 {
-	double density_e_bohr = density_e*pow(P_bohr*1e-8, 3);
-    double mu0_eV = pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV; //unit in Ry
+    double mu0_eV = fermi_energy(density_e);
     double mu_eV;
     if(T_eV <= 1)
 	{
@@ -68,6 +67,12 @@ double FUNC:: FEG_mu(const double density_e, const double T_eV)
 	}
     return mu_eV;
 }
+
+ double FUNC::fermi_energy(const double density_e)
+ {
+	double density_e_bohr = density_e*pow(P_bohr*1e-8, 3);
+    return pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV;
+ }
 
 double FUNC:: FEG_ECUT1(double mu_eV, double T_eV)
 {
