@@ -1,0 +1,14 @@
+Please choose the tool 
+1: Unit convert
+2: calculate MD parameter
+3: calculate conductivities
+Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)
+Input the density (g/cm^3):
+Input the temperature (eV):
+density: 1.39398e+24 cm^-3 ; temperature: 5 eV
+Fermi energy: 45.0422 eV ; Tf/T = 9.00844
+Coulomb-coupling parameter : 59.7386 ; Fermi-degeneracy parameter : 0.109882
+Lee-More:
+electrical conductivity: 404368 Sm^-1
+thermal conductivity: 586.464 W(mK)^-1
+Lorenz number: 3.36605

@@ -1,6 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include <vector>
+#include "molecule.h"
 using namespace std;
 class FUNC
 {
@@ -30,7 +31,11 @@ class FUNC
         //calculate transport coefficients
         void conductivity();
     private:
+        double coupling_parameter(molecule &mol, const double T_eV, const double density);
+        double degeneracy_parameter(const double T_eV, const double density_e);
         void lee_more(const double T_eV, const double mu_eV, const double density_e, 
+                        const vector<double>& denlist_i, const vector<double>& zionlist);
+        void Ichimaru(const double T_eV, const double mu_eV, const double density_e, 
                         const vector<double>& denlist_i, const vector<double>& zionlist);
         
 

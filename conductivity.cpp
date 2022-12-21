@@ -16,28 +16,22 @@ void FUNC::conductivity()
 	double T_eV = read_temperature();
     //--------------------------------------------------------
     vector<double> zionlist = thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist);
-    double z_per_mol(0), mass_per_mol(0), n_per_mol(0);
-	for(int i = 0 ; i < nlist.size(); ++i)
-	{
-        mass_per_mol += nlist[i] * mlist[i];
-        z_per_mol += nlist[i] * zionlist[i];
-		n_per_mol += nlist[i];
-        // cout<<"z_ion: "<<zionlist[i]<<endl;
-	}
-    double z_avg = z_per_mol / n_per_mol;
-    double molden = rho_i / mass_per_mol * P_NA * n_per_mol; //unit: cm^-3
+    molecule mol0(mlist, zlist, nlist);
+    molecule mol(mlist, zionlist, nlist);
+    double z_avg = mol.avg_z;
+    double den_mole = rho_i / (mol.avg_m/P_NA); //unit: cm^-3
     for(int i = 0 ; i < nlist.size(); ++i)
 	{
-        denlist_i.push_back(molden * nlist[i] / n_per_mol); //unit: cm^-3
+        denlist_i.push_back(den_mole * nlist[i] / mol.tot_n); //unit: cm^-3
     }
-    double density_e = molden * z_avg; //unit cm^-3
+    double density_e = den_mole * z_avg; //unit cm^-3
     double mu_eV = FEG_mu(density_e, T_eV);
-    cout<<"density: "<<density_e<<" "<<yellow("g/cm^3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
-    cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" Tf/T = "<<mu_eV/T_eV<<endl;
-
+    cout<<"density: "<<density_e<<" "<<yellow("cm^-3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
+    cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" ; Tf/T = "<<mu_eV/T_eV<<endl;
+    cout<<"Coulomb-coupling parameter: "<<coupling_parameter(mol0, T_eV, rho_i)<<" ; Fermi-degeneracy parameter: "<<degeneracy_parameter(T_eV, density_e)<<endl;
     //--------------------------------------------------------
     lee_more(T_eV, mu_eV, density_e, denlist_i, zionlist);
-    
+    // Ichimaru(T_eV, mu_eV, density_e, denlist_i, zionlist);
 }
 
 //density_e: cm^-3; denlist_i: cm^-3
@@ -111,6 +105,71 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     cout<<"electrical conductivity: "<<sigma<<" "<<yellow("Sm^-1")<<endl;
     cout<<"thermal conductivity: "<<kappa<<" "<<yellow("W(mK)^-1")<<endl;
     cout<<"Lorenz number: "<<kappa_au/sigma_au/kT<<endl;
+}
+
+void FUNC::Ichimaru(const double T_eV, const double mu_eV, const double density_e, 
+                        const vector<double>& denlist_i, const vector<double>& zionlist)
+{
+    // Hartree atomic unit
+    double T = T_eV / Ha2eV;
+    double Ef = fermi_energy(density_e) / Ha2eV;
+    double mu_kT = mu_eV / T_eV;
+    double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
+    //----------------------------------
+    const double gamma = 0.5772156649;
+    const double expgamma = exp(gamma);
+    double rs = pow(3.0/4/M_PI/density_e_au, 1.0/3.0);
+    double xb = sqrt(rs * tanh(sqrt(2*M_PI/T) * pow(density_e_au, 1.0/3.0)));
+    double Gamma_e = 1.0/rs/T;
+    double theta = T / Ef;
+    double fz_E(0), fz_T(0);
+    double density_i_tot_au = 0;
+    for(int i = 0 ; i < zionlist.size() ; ++i)
+    {
+        double Z = zionlist[i];
+        if(Z > 26) 
+        {
+            cout<<"Ichimaru model do not support Z > 26."<<endl;
+            return;
+        }
+        double zeta_DH = pow(Z+1, 1+1.0/Z) * expgamma * Gamma_e / pow(12*M_PI*M_PI, 1.0/3.0) / theta;
+        double zeta_Born = 1.0/(2.5 * pow(theta, 1.5) * pow(Z,4.0/3.0)) * exp(-1.47*pow(Z,1.0/3.0));
+        double LE = 0.5 * log(1 + 1/zeta_DH + tanh(1/zeta_Born))
+                * (1 + 0.42*xb*xb*exp(-6e-4*rs*rs) + 0.063*pow(xb*xb*exp(-6e-4*rs*rs),5));
+        double LT = 0.5 * log(1 + 75/(13*M_PI*M_PI)*(1/zeta_DH + tanh(1/zeta_Born)))
+                * (1 + 0.38*xb*xb*exp(-6e-4*rs*rs) + 0.049*pow(xb*xb*exp(-6e-4*rs*rs),5));
+        fz_E += Z*Z*LE;
+        fz_T += Z*Z*LT;
+        density_i_tot_au += denlist_i[i] * pow(P_bohr*1e-8, 3);
+
+    }
+    double rho_E = 8.0/3.0*sqrt(M_PI/2) * fz_E * density_i_tot_au / density_e_au / pow(T, 1.5);
+    double rho_T = 52.0*sqrt(2*M_PI)/75 * fz_T * density_i_tot_au / density_e_au / pow(T, 2.5);
+    //----------------------------------
+    double sigma_au = 1 / rho_E;
+    double kappa_au = 1 / rho_T;
+    //----------------------------------
+    const double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
+    const double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
+    double sigma = sigma_au * au2si_sigma;
+    double kappa = kappa_au * au2si_kappa;
+    cout<<"Ichimaru:"<<endl;
+    cout<<"electrical conductivity: "<<sigma<<" "<<yellow("Sm^-1")<<endl;
+    cout<<"thermal conductivity: "<<kappa<<" "<<yellow("W(mK)^-1")<<endl;
+    cout<<"Lorenz number: "<<kappa_au/sigma_au/T<<endl;
+
+}
+
+double FUNC:: degeneracy_parameter(const double T_eV, const double density_e)
+{
+    return T_eV/fermi_energy(density_e);
+}
+
+double FUNC:: coupling_parameter(molecule &mol, const double T_eV, const double density)
+{
+    double mass_atom_g = mol.avg_m/P_NA;
+    double a = pow(mass_atom_g/density*3/4/M_PI,1.00/3)*1e8/P_bohr; //a.u.
+    return mol.avg_z * mol.avg_z / (a * T_eV / Ha2eV);
 }
 
 double fd_integral(const double x, const double j)

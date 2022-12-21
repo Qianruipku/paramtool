@@ -6,6 +6,7 @@ OBJ=obj/main.o\
 	obj/convert.o\
 	obj/function.o\
 	obj/mdpara.o\
+	obj/molecule.o\
 	obj/elements.o\
 	obj/conductivity.o\
 	obj/chemical_potential.o\
