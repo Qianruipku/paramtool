@@ -9,10 +9,11 @@ cat>input<<EOF
 $ele
 $density
 $T
+2
 EOF
 tool.exe<input >_tmp
-sigma=`grep "electrical conductivity" _tmp | awk '{print $3}' `
-kappa=`grep "thermal conductivity" _tmp | awk '{print $3}' `
+sigma=`grep "electrical conductivity" _tmp |head -n 1 | awk '{print $3}' `
+kappa=`grep "thermal conductivity" _tmp |head -n 1 | awk '{print $3}' `
 rm -f _tmp
 echo $T $sigma $kappa
 done

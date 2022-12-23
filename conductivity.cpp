@@ -14,24 +14,41 @@ void FUNC::conductivity()
 	read_elemets(mlist, zlist, nlist);
     double rho_i = read_density(); //g/cm3
 	double T_eV = read_temperature();
+    int ionization;
+    cout<<green("Please choose ionization model:")<<endl;
+    cout<<green("1. full ionization; 2. Thomas-Fermi ionization")<<endl;
+    cin>>ionization;
+    vector<double> zionlist;
+    if(ionization == 1)
+    {
+        zionlist = zlist;
+    }
+    else if(ionization == 2)
+    {
+        zionlist = thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist);
+    }
+    else
+    {
+        cout<<red("Wrong Input!")<<endl;
+        exit(1);
+    }
     //--------------------------------------------------------
-    vector<double> zionlist = thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist);
-    molecule mol0(mlist, zlist, nlist);
     molecule mol(mlist, zionlist, nlist);
-    double z_avg = mol.avg_z;
     double den_mole = rho_i / (mol.avg_m/P_NA); //unit: cm^-3
     for(int i = 0 ; i < nlist.size(); ++i)
 	{
         denlist_i.push_back(den_mole * nlist[i] / mol.tot_n); //unit: cm^-3
     }
-    double density_e = den_mole * z_avg; //unit cm^-3
+    double density_e = den_mole * mol.avg_z; //unit cm^-3
     double mu_eV = FEG_mu(density_e, T_eV);
     cout<<"density: "<<density_e<<" "<<yellow("cm^-3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
     cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" ; Tf/T = "<<mu_eV/T_eV<<endl;
-    cout<<"Coulomb-coupling parameter: "<<coupling_parameter(mol0, T_eV, rho_i)<<" ; Fermi-degeneracy parameter: "<<degeneracy_parameter(T_eV, density_e)<<endl;
+    // double  t(10), g(0.05);
+    // cout<<pow(2/(3*M_PI*g*t),3)*4*(mol.avg_m/P_NA)/pow(P_bohr*1e-8, 3)<<" dd "<<2.0/(g*g*t*pow(9.0*M_PI/4, 2.0/3.0))*Ha2eV<<endl;
+    cout<<"Coulomb-coupling parameter: "<<coupling_parameter(mol, T_eV, density_e)<<" ; Fermi-degeneracy parameter: "<<degeneracy_parameter(T_eV, density_e)<<endl;
     //--------------------------------------------------------
     lee_more(T_eV, mu_eV, density_e, denlist_i, zionlist);
-    // Ichimaru(T_eV, mu_eV, density_e, denlist_i, zionlist);
+    Ichimaru(T_eV, mu_eV, density_e, denlist_i, zlist);
 }
 
 //density_e: cm^-3; denlist_i: cm^-3
@@ -165,10 +182,9 @@ double FUNC:: degeneracy_parameter(const double T_eV, const double density_e)
     return T_eV/fermi_energy(density_e);
 }
 
-double FUNC:: coupling_parameter(molecule &mol, const double T_eV, const double density)
+double FUNC:: coupling_parameter(molecule &mol, const double T_eV, const double density_e)
 {
-    double mass_atom_g = mol.avg_m/P_NA;
-    double a = pow(mass_atom_g/density*3/4/M_PI,1.00/3)*1e8/P_bohr; //a.u.
+    double a = pow(mol.avg_z/density_e*3.0/4/M_PI,1.0/3)*1e8/P_bohr; //a.u.
     return mol.avg_z * mol.avg_z / (a * T_eV / Ha2eV);
 }
 

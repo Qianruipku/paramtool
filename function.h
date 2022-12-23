@@ -31,7 +31,7 @@ class FUNC
         //calculate transport coefficients
         void conductivity();
     private:
-        double coupling_parameter(molecule &mol, const double T_eV, const double density);
+        double coupling_parameter(molecule &mol, const double T_eV, const double density_e);
         double degeneracy_parameter(const double T_eV, const double density_e);
         void lee_more(const double T_eV, const double mu_eV, const double density_e, 
                         const vector<double>& denlist_i, const vector<double>& zionlist);
