@@ -15,4 +15,6 @@ dt: 0.04217410 fs; 0.87176699 Ry.-a.u.
 FEG mu: 27.968 eV; 2.056 Ry
 Guess Ecut1 (interror < 1e-3): 105.439 eV; 7.750 Ry
 Guess Ecut2 (f<1e-5):          156.912 eV; 11.533 Ry
+Ionization: 50.663%
+Nbands1: 327 ; Nbands2: 556
 ---------------------------------------------------------

@@ -17,12 +17,15 @@ void FUNC::mdparameter()
 	//----------------------------------------------------------
 	vector<double> zionlist = thomas_fermi_ionization(density, temp, mlist, zlist, nlist);
 	molecule mol(mlist, zionlist, nlist);
+	molecule mol0(mlist, zlist, nlist);
 
 	double z_per_mol = mol.tot_z;
 	double n_per_mol = mol.tot_n;
 	double min_mass = mol.min_m;
 	double na = n_per_mol * nmol;
 	double ne = z_per_mol * nmol;
+
+	double ionization = mol.tot_z/mol0.tot_z;
 
 	double mass_atom_g = mol.avg_m/P_NA; //averge mass of each atom: g
 	double l_cm = pow(na*mass_atom_g/density,1.00/3);
@@ -38,6 +41,9 @@ void FUNC::mdparameter()
 	double Ecut1_Ry = Ecut1_eV / Ry2eV;
 	double Ecut2_eV = FEG_ECUT2( mu_eV, temp);;
 	double Ecut2_Ry = Ecut2_eV / Ry2eV;
+
+	int nbands1 = this->calbands(Ecut1_eV, fermi_energy(ne / pow(l_cm,3)), mol0.tot_z*nmol, ionization);
+	int nbands2 = this->calbands(Ecut2_eV, fermi_energy(ne / pow(l_cm,3)), mol0.tot_z*nmol, ionization);
 	cout<<"---------------------------------------------------------"<<endl;
 	cout<<"Lattice constant: "<<fixed<<setprecision(8)<<l_bohr<<yellow(" P_bohr; ")<<l_ang<<yellow(" Angstrom")<<endl;
 	cout<<"Wigner-Seitz radius: "<<WSr_bohr<<yellow(" P_bohr;")<<"  (0.7*WS = "<<0.7*WSr_bohr<<")"<<endl;
@@ -47,6 +53,8 @@ void FUNC::mdparameter()
 	cout<<"FEG mu: "<<setprecision(3)<<mu_eV<<yellow(" eV; ")<<mu_Ry<<yellow(" Ry")<<endl;
 	cout<<"Guess Ecut1 (interror < 1e-3): "<<Ecut1_eV<<yellow(" eV; ")<<Ecut1_Ry<<yellow(" Ry")<<endl;
 	cout<<"Guess Ecut2 (f<1e-5):          "<<Ecut2_eV<<yellow(" eV; ")<<Ecut2_Ry<<yellow(" Ry")<<endl;
+	cout<<"Ionization: "<<ionization*100<<"%"<<endl;
+	cout<<"Nbands1: "<<nbands1<<" ; Nbands2: "<<nbands2<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
 	return;
 }

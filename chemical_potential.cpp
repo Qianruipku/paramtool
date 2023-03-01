@@ -4,6 +4,13 @@ double getmu(double mu_0, double T);
 double calint(double fun(double e, double mu, double T), double mu, double T,double thr);
 double funmu(double e, double mu, double T);
 
+/**
+ * @brief thomas fermi ionization
+   @cite R.M. More, "Pressure Ionization, Resonances, and the
+	Continuity of Bound and Free States", Adv. in Atomic
+	Mol. Phys., Vol. 21, p. 332 (Table IV).
+ * 
+ */
 vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist, const vector<double> &zlist, const vector<double> &nlist)
 {
 	double alpha = 14.3139;
@@ -44,11 +51,14 @@ vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const doub
 
     return zionlist;
 }
-
-//mu of free electrons, assume all electrons are ionized.
-//mu0=P_hbar^2/2m*(3pi^2N/V)^(2/3)
-//mu = mu0(1 - pi^2/12*(kT/mu0)^2) (mu/T >> 1)
-//density_e: cm^-3  ; T_eV: eV
+/**
+ * @brief mu of free electrons
+ * 		  mu0=P_hbar^2/2m*(3pi^2N/V)^(2/3)
+ *        mu = mu0(1 - pi^2/12*(kT/mu0)^2) (mu/T >> 1)
+ *        density_e: cm^-3  ; T_eV: eV
+ * @cite Dharma-wardana, 1981 J. Phys. C : Solid State Phys. 14 629
+ * 
+ */
 double FUNC:: FEG_mu(const double density_e, const double T_eV)
 {
     double mu0_eV = fermi_energy(density_e);
@@ -165,3 +175,11 @@ double funmu(double e, double mu, double T)
 	return sqrt(e)/(exp((e-mu)/T)+1);
 }
 
+/**
+ * @brief Nbands = 1/2 * (z * sqrt(E/mu0) * Ne + (1-z) * Ne)
+ * 
+ */
+int FUNC::calbands(double ecut_eV, double mu0_eV, double ne0, double ionization)
+{
+	return int(( ionization * pow(ecut_eV/mu0_eV, 3.0/2.0)*ne0 + (1-ionization)*ne0 )/2) + 1;
+}

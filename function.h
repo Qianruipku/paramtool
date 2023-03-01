@@ -25,6 +25,8 @@ class FUNC
         //estimate ECUT with FEG model
         double FEG_ECUT1(double mu, double T);
         double FEG_ECUT2(double mu, double T);
+        //get nbands
+        int calbands(double ecut_eV, double mu0_eV, double ne0, double ionization);
         
 
     public:

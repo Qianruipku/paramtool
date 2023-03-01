@@ -84,6 +84,11 @@ void get_masscharge(const string in, double &mass, double &charge)
 		mass = MASS_T;
         charge = 1.0;
 	}
+	else if(small == "he")
+	{
+		mass = MASS_He;
+        charge = 2.0;
+	}
 	else if(small == "li")
 	{
 		mass = MASS_Li;
