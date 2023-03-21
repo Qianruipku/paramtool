@@ -42,8 +42,13 @@ void FUNC::mdparameter()
 	double Ecut2_eV = FEG_ECUT2( mu_eV, temp);;
 	double Ecut2_Ry = Ecut2_eV / Ry2eV;
 
-	int nbands1 = this->calbands(Ecut1_eV, fermi_energy(ne / pow(l_cm,3)), mol0.tot_z*nmol, ionization);
-	int nbands2 = this->calbands(Ecut2_eV, fermi_energy(ne / pow(l_cm,3)), mol0.tot_z*nmol, ionization);
+	double mu0_eV = fermi_energy(ne / pow(l_cm,3));
+	double degeneracy = temp / mu0_eV;
+	double coupling = mol0.avg_z / (2*WSr_bohr) / temp * Ha2eV;
+
+
+	int nbands1 = this->calbands(Ecut1_eV, mu0_eV, mol0.tot_z*nmol, ionization);
+	int nbands2 = this->calbands(Ecut2_eV, mu0_eV, mol0.tot_z*nmol, ionization);
 	cout<<"---------------------------------------------------------"<<endl;
 	cout<<"Lattice constant: "<<fixed<<setprecision(8)<<l_bohr<<yellow(" P_bohr; ")<<l_ang<<yellow(" Angstrom")<<endl;
 	cout<<"Wigner-Seitz radius: "<<WSr_bohr<<yellow(" P_bohr;")<<"  (0.7*WS = "<<0.7*WSr_bohr<<")"<<endl;
@@ -55,6 +60,7 @@ void FUNC::mdparameter()
 	cout<<"Guess Ecut2 (f<1e-5):          "<<Ecut2_eV<<yellow(" eV; ")<<Ecut2_Ry<<yellow(" Ry")<<endl;
 	cout<<"Ionization: "<<ionization*100<<"%"<<endl;
 	cout<<"Nbands1: "<<nbands1<<" ; Nbands2: "<<nbands2<<endl;
+	cout<<"Coupling constant: "<<coupling<<" ; Degeneracy parameter: "<<degeneracy<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
 	return;
 }

@@ -17,4 +17,5 @@ Guess Ecut1 (interror < 1e-3): 105.439 eV; 7.750 Ry
 Guess Ecut2 (f<1e-5):          156.912 eV; 11.533 Ry
 Ionization: 50.663%
 Nbands1: 327 ; Nbands2: 556
+Coupling constant: 2.974 ; Degeneracy parameter: 0.352
 ---------------------------------------------------------
