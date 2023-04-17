@@ -109,6 +109,11 @@ void get_masscharge(const string in, double &mass, double &charge)
 		mass = MASS_C;
         charge = 6.0;
 	}
+	else if(small == "n")
+	{
+		mass = MASS_N;
+        charge = 7.0;
+	}
 	else if(small == "o")
 	{
 		mass = MASS_O;

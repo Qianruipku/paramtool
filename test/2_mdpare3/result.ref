@@ -7,8 +7,8 @@ Input the number of molecules:
 Input the density (g/cm^3):
 Input the temperature (eV):
 ---------------------------------------------------------
-Lattice constant: 9.17265065 P_bohr; 4.85395769 Angstrom
-Wigner-Seitz radius: 1.56573492 P_bohr;  (0.7*WS = 1.09601444)
+Lattice constant: 9.17265065 Bohr; 4.85395769 Angstrom
+Wigner-Seitz radius: 1.56573492 Bohr;  (0.7*WS = 1.09601444)
 Temperature: 0.82318535 Ry; 129970.46068473 K
 dt: 0.04217410 fs; 0.87176699 Ry.-a.u.
 1/(40dt): 0.59278091 fs^-1

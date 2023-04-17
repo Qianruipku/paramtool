@@ -6,6 +6,9 @@
         "cmath": "cpp",
         "ostream": "cpp",
         "*.tcc": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iosfwd": "cpp",
+        "iomanip": "cpp",
+        "new": "cpp"
     }
 }

@@ -13,6 +13,7 @@ using namespace std;
 #define MASS_Be  9.012182
 #define MASS_B   10.811
 #define MASS_C   12.0107
+#define MASS_N   14.0067
 #define MASS_O   15.9994
 #define MASS_F   18.9984032
 #define MASS_Ne  20.1797
