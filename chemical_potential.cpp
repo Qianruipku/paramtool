@@ -11,7 +11,8 @@ double funmu(double e, double mu, double T);
 	Mol. Phys., Vol. 21, p. 332 (Table IV).
  * 
  */
-vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist, const vector<double> &zlist, const vector<double> &nlist)
+void FUNC::thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist,
+								   const vector<double> &zlist, const vector<double> &nlist, vector<double>& zionlist)
 {
 	double alpha = 14.3139;
     double beta = 0.6624;
@@ -33,9 +34,9 @@ vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const doub
 	}
 	m_per /= n_per_mol;
 
-	vector<double> zionlist;
 	for(int i = 0 ; i< nlist.size(); ++i)
 	{
+		if(zionlist[i] > 0) continue;
 		double Z = zlist[i];
 		double T0 = T_eV / pow(Z, 4.0/3.0);
     	double R = density_gm / (Z*m_per);
@@ -46,10 +47,10 @@ vector<double> FUNC::thomas_fermi_ionization(const double density_gm, const doub
     	double Q1 = A * pow(R, B);
     	double Q = pow((pow(R, C)+pow(Q1, C)), (1.0/C));
     	double x = alpha * pow(Q, beta);
-		zionlist.push_back(Z * x / (1 + x + sqrt(1.0 + 2.0*x)));
+		zionlist[i] = Z * x / (1 + x + sqrt(1.0 + 2.0*x));
 	}
 
-    return zionlist;
+    return;
 }
 /**
  * @brief mu of free electrons

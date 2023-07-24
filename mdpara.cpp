@@ -9,13 +9,13 @@
 
 void FUNC::mdparameter()
 {
-	vector<double> mlist, zlist, nlist;
-	read_elemets(mlist, zlist, nlist);
+	vector<double> mlist, zlist, nlist, zionlist;
+	read_elemets(mlist, zlist, nlist, zionlist);
 	double nmol = read_number_of_molecules();
 	double density = read_density();
 	double temp = read_temperature();
 	//----------------------------------------------------------
-	vector<double> zionlist = thomas_fermi_ionization(density, temp, mlist, zlist, nlist);
+	thomas_fermi_ionization(density, temp, mlist, zlist, nlist, zionlist);
 	molecule mol(mlist, zionlist, nlist);
 	molecule mol0(mlist, zlist, nlist);
 

@@ -12,10 +12,10 @@ Wigner-Seitz radius: 1.56573492 Bohr;  (0.7*WS = 1.09601444)
 Temperature: 0.82318535 Ry; 129970.46068473 K
 dt: 0.04217410 fs; 0.87176699 Ry.-a.u.
 1/(40dt): 0.59278091 fs^-1
-FEG mu: 27.968 eV; 2.056 Ry
-Guess Ecut1 (interror < 1e-3): 105.439 eV; 7.750 Ry
-Guess Ecut2 (f<1e-5):          156.912 eV; 11.533 Ry
-Ionization: 50.663%
-Nbands1: 327 ; Nbands2: 556
-Coupling constant: 2.974 ; Degeneracy parameter: 0.352
+FEG mu: 26.613 eV; 1.956 Ry
+Guess Ecut1 (interror < 1e-3): 104.684 eV; 7.694 Ry
+Guess Ecut2 (f<1e-5):          155.558 eV; 11.433 Ry
+Ionization: 47.870%
+Nbands1: 327 ; Nbands2: 552
+Coupling constant: 2.974 ; Degeneracy parameter: 0.366
 ---------------------------------------------------------

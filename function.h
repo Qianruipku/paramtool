@@ -16,7 +16,8 @@ class FUNC
         void mdparameter();
     private:
         //calculate number of ionziation electrons
-        vector<double> thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist, const vector<double> &zlist, const vector<double> &nlist);
+        void thomas_fermi_ionization(const double density_gm, const double T_eV, const vector<double> &mlist, 
+                                const vector<double> &zlist, const vector<double> &nlist, vector<double>& zionlist);
         //calculate fermi energy (0 eV), unit: eV 
         double fermi_energy(const double density_e);
         //calculate chemical potential of free electron gas
@@ -46,6 +47,6 @@ class FUNC
         double read_density();
         double read_temperature();
         double read_number_of_molecules();
-        void read_elemets(vector<double> &mlist, vector<double> &zlist, vector<double> &nlist);
+        void read_elemets(vector<double> &mlist, vector<double> &zlist, vector<double> &nlist, vector<double> &zionlist);
 };
 #endif

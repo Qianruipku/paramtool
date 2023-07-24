@@ -21,6 +21,8 @@ endif
 
 tool.exe:$(OBJ)
 	$(CXX) $(OPTION) -o tool.exe $(OBJ)
+install:
+	@$(MAKE) tool.exe
 	@if [ $(TEST) == OFF ]; then cp tool.exe $(BIN_PATH); fi
 	@if [ $(TEST) == ON ]; then cd test;./Autotest.sh ;cd ..; fi
 obj/%.o:%.cpp

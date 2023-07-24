@@ -26,10 +26,10 @@ double FUNC:: read_number_of_molecules()
     return nmol;
 }
 
-void FUNC::read_elemets(vector<double> &mlist, vector<double> &zlist, vector<double> &nlist)
+void FUNC::read_elemets(vector<double> &mlist, vector<double> &zlist, vector<double> &nlist, vector<double> &zionlist)
 {
     string name;
     cout<<green("Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)")<<endl;
 	cin>>name;
-    readstring(name, mlist, zlist, nlist);
+    readstring(name, mlist, zlist, nlist, zionlist);
 }

@@ -30,7 +30,7 @@ molecule:: molecule(molecule& mol)
     this->operator=(mol);
 }
 
-molecule molecule:: operator=(const molecule mol)
+molecule molecule:: operator=(const molecule& mol)
 {
     this->mlist = mol.mlist;
     this->zlist = mol.zlist;

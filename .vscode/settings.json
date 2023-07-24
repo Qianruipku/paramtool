@@ -9,6 +9,8 @@
         "vector": "cpp",
         "iosfwd": "cpp",
         "iomanip": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }

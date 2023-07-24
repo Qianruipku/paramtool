@@ -25,7 +25,7 @@ public:
     double nele;
 
     double min_m, max_m;
-    molecule operator=(const molecule mol);
+    molecule operator=(const molecule& mol);
 
 };
 #endif

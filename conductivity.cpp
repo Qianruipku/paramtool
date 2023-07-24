@@ -10,28 +10,12 @@ double getA_beta(const double mu_kT);
 
 void FUNC::conductivity()
 {
-    vector<double> mlist, zlist, nlist, denlist_i;
-	read_elemets(mlist, zlist, nlist);
+    vector<double> mlist, zlist, nlist, denlist_i, zionlist;
+	read_elemets(mlist, zlist, nlist, zionlist);
     double rho_i = read_density(); //g/cm3
 	double T_eV = read_temperature();
-    int ionization;
-    cout<<green("Please choose ionization model:")<<endl;
-    cout<<green("1. full ionization; 2. Thomas-Fermi ionization")<<endl;
-    cin>>ionization;
-    vector<double> zionlist;
-    if(ionization == 1)
-    {
-        zionlist = zlist;
-    }
-    else if(ionization == 2)
-    {
-        zionlist = thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist);
-    }
-    else
-    {
-        cout<<red("Wrong Input!")<<endl;
-        exit(1);
-    }
+
+    thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist, zionlist);
     //--------------------------------------------------------
     molecule mol(mlist, zionlist, nlist);
     double den_mole = rho_i / (mol.avg_m/P_NA); //unit: cm^-3

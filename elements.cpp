@@ -8,11 +8,12 @@ void Stringsplit(const string& str, const char split, vector<string>& res);
 void get_masscharge(const string in, double &mass, double &charge);
 
 
-void readstring(const string name, vector<double> &mlist, vector<double> &zlist, vector<double> &nlist)
+void readstring(const string name, vector<double> &mlist, vector<double> &zlist, vector<double> &nlist, vector<double> &zionlist)
 {
 	mlist.clear();
 	zlist.clear();
 	nlist.clear();
+	zionlist.clear();
     vector<string> list;
     Stringsplit(name, '-', list);
     if(list.size() == 0)
@@ -20,7 +21,7 @@ void readstring(const string name, vector<double> &mlist, vector<double> &zlist,
         cout<<red("No information")<<endl;
         exit(0);
     }
-    double tmpmass, tmpchg;
+    double tmpmass, tmpchg, tmpzion;
     for(vector<string>::iterator it = list.begin(); it != list.end() ;++it)
     {
         double tmpit = str2dou(*it);
@@ -29,7 +30,22 @@ void readstring(const string name, vector<double> &mlist, vector<double> &zlist,
             cout<<red("Wrong format!")<<endl;
             exit(0);
         }
-        get_masscharge(*it, tmpmass, tmpchg);
+		
+		string namepluszion = *it;
+		size_t pos = namepluszion.find('^');
+		string name;
+		if( pos != namepluszion.npos)
+		{
+			name = namepluszion.substr(0, pos);
+			tmpzion = str2dou(namepluszion.substr(pos+1, namepluszion.size()));
+		}
+		else
+		{
+			name = namepluszion;
+			tmpzion = 0.0;
+		}
+
+        get_masscharge(name, tmpmass, tmpchg);
         double count = 1.0;
         ++it;
         if(it != list.end())
@@ -45,6 +61,7 @@ void readstring(const string name, vector<double> &mlist, vector<double> &zlist,
 		mlist.push_back(tmpmass);
 		zlist.push_back(tmpchg);
 		nlist.push_back(count);
+		zionlist.push_back(tmpzion);
 		// cout<<tmpmass<<" "<<tmpchg<<" "<<count<<endl;
     }
 }
