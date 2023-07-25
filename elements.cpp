@@ -32,7 +32,7 @@ void readstring(const string name, vector<double> &mlist, vector<double> &zlist,
         }
 		
 		string namepluszion = *it;
-		size_t pos = namepluszion.find('^');
+		size_t pos = namepluszion.find('_');
 		string name;
 		if( pos != namepluszion.npos)
 		{

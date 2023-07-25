@@ -53,7 +53,7 @@ void FUNC::mdparameter()
 	cout<<"Lattice constant: "<<fixed<<setprecision(8)<<l_bohr<<yellow(" Bohr; ")<<l_ang<<yellow(" Angstrom")<<endl;
 	cout<<"Wigner-Seitz radius: "<<WSr_bohr<<yellow(" Bohr;")<<"  (0.7*WS = "<<0.7*WSr_bohr<<")"<<endl;
 	cout<<"Temperature: "<<temp/Ry2eV<<yellow(" Ry; ")<<temp*eV2K<<yellow(" K")<<endl;
-	cout<<"dt: "<<dt_fs<<yellow(" fs; ")<<dt_au<<yellow(" Ry.-a.u.")<<endl;
+	cout<<"dt: "<<dt_fs<<yellow(" fs; ")<<dt_au<<yellow(" Ry^-1")<<endl;
 	cout<<"1/(40dt): "<<double(1.0)/40/dt_fs<<yellow(" fs^-1")<<endl;
 	cout<<"FEG mu: "<<setprecision(3)<<mu_eV<<yellow(" eV; ")<<mu_Ry<<yellow(" Ry")<<endl;
 	cout<<"Guess Ecut1 (interror < 1e-3): "<<Ecut1_eV<<yellow(" eV; ")<<Ecut1_Ry<<yellow(" Ry")<<endl;

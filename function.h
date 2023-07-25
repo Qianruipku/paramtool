@@ -36,6 +36,29 @@ class FUNC
     private:
         double coupling_parameter(molecule &mol, const double T_eV, const double density_e);
         double degeneracy_parameter(const double T_eV, const double density_e);
+
+        /**
+         * @brief Spitzer-Harm model to calculate electrical and thermal conductivities
+         * 
+         * @param T_eV temperature (eV)
+         * @param mu_eV Chemical potential (eV)
+         * @param density_e number density of electrons (cm^-3)
+         * @param denlist_i number density of ions      (cm^-3)
+         * @param zionlist number list of ionized electrons
+         * @cite https://journals.aps.org/pr/abstract/10.1103/PhysRev.89.977
+         */
+        void spitzer(const double T_eV, const double mu_eV, const double density_e, 
+                        const vector<double>& denlist_i, const vector<double>& zionlist);
+        /**
+         * @brief Lee-More model to calculate electrical and thermal conductivities
+         * 
+         * @param T_eV temperature (eV)
+         * @param mu_eV Chemical potential (eV)
+         * @param density_e number density of electrons (cm^-3)
+         * @param denlist_i number density of ions      (cm^-3)
+         * @param zionlist number list of ionized electrons
+         * @cite https://pubs.aip.org/aip/pfl/article/27/5/1273/808240/An-electron-conductivity-model-for-dense-plasmas
+         */
         void lee_more(const double T_eV, const double mu_eV, const double density_e, 
                         const vector<double>& denlist_i, const vector<double>& zionlist);
         void Ichimaru(const double T_eV, const double mu_eV, const double density_e, 

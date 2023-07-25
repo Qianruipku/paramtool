@@ -10,7 +10,7 @@ Input the temperature (eV):
 Lattice constant: 9.17265065 Bohr; 4.85395769 Angstrom
 Wigner-Seitz radius: 1.56573492 Bohr;  (0.7*WS = 1.09601444)
 Temperature: 0.82318535 Ry; 129970.46068473 K
-dt: 0.04217410 fs; 0.87176699 Ry.-a.u.
+dt: 0.04217410 fs; 0.87176699 Ry^-1
 1/(40dt): 0.59278091 fs^-1
 FEG mu: 26.613 eV; 1.956 Ry
 Guess Ecut1 (interror < 1e-3): 104.684 eV; 7.694 Ry

@@ -1,5 +1,6 @@
 #include "function.h"
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include "const.h"
 #include "tool.h"
@@ -17,7 +18,9 @@ void FUNC::conductivity()
 
     thomas_fermi_ionization(rho_i, T_eV, mlist, zlist, nlist, zionlist);
     //--------------------------------------------------------
+    molecule mol0(mlist, zlist, nlist);
     molecule mol(mlist, zionlist, nlist);
+    double ionization = mol.tot_z/mol0.tot_z;
     double den_mole = rho_i / (mol.avg_m/P_NA); //unit: cm^-3
     for(int i = 0 ; i < nlist.size(); ++i)
 	{
@@ -27,20 +30,72 @@ void FUNC::conductivity()
     double mu_eV = FEG_mu(density_e, T_eV);
     cout<<"density: "<<density_e<<" "<<yellow("cm^-3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
     cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" ; Tf/T = "<<mu_eV/T_eV<<endl;
+    cout<<"Ionization: "<<ionization*100<<"%"<<endl;
     // double  t(10), g(0.05);
     // cout<<pow(2/(3*M_PI*g*t),3)*4*(mol.avg_m/P_NA)/pow(P_bohr*1e-8, 3)<<" dd "<<2.0/(g*g*t*pow(9.0*M_PI/4, 2.0/3.0))*Ha2eV<<endl;
     cout<<"Coulomb-coupling parameter: "<<coupling_parameter(mol, T_eV, density_e)<<" ; Fermi-degeneracy parameter: "<<degeneracy_parameter(T_eV, density_e)<<endl;
     //--------------------------------------------------------
+    cout<<std::left<<setw(20)<<"Model"<<setw(29)<<"Sigma"+yellow("(Sm^-1)")<<setw(29)<<"Kappa"+yellow("(W(mK)^-1)")<<setw(20)<<"Lorentz number"<<endl;
+    spitzer (T_eV, mu_eV, density_e, denlist_i, zionlist);
     lee_more(T_eV, mu_eV, density_e, denlist_i, zionlist);
-    Ichimaru(T_eV, mu_eV, density_e, denlist_i, zlist);
+    // Ichimaru(T_eV, mu_eV, density_e, denlist_i, zlist);
 }
 
-//density_e: cm^-3; denlist_i: cm^-3
+void FUNC:: spitzer(const double T_eV, const double mu_eV, const double density_e, 
+                        const vector<double>& denlist_i, const vector<double>& zionlist)
+{
+    // Hartree atomic unit
+    double kT_au = T_eV / Ha2eV;
+    double kTf_au = fermi_energy(density_e) / Ha2eV;
+    double mu_kT = mu_eV / T_eV;
+    double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
+    //---------mean ionic charge---------
+    double Z_avg = 0;
+    for(int i = 0 ; i < denlist_i.size(); ++i)
+    {
+        Z_avg += denlist_i[i] * zionlist[i] * zionlist[i];
+    }
+    Z_avg /= density_e;
+    //----------Coulomb logarithm--------
+    double Lambda = 3.0*pow(kT_au, 1.5) / (2*sqrt(M_PI*density_e_au)*Z_avg);
+    double T_K = T_eV * eV2K;
+    if(T_K > 4.2e5)
+    {
+        Lambda *= sqrt(4.2e5/T_K);
+    }
+    if(Lambda < 1)
+    {
+        cout<<std::left<<setw(20)<<"Spitzer"<<setw(20)<<"---"<<setw(20)<<"---"<<setw(20)<<"---"<<endl;
+        return;
+    }
+    double cou_log = log(Lambda);
+    //-------------conductivity----------
+    double sigma_au = 4.0*sqrt(2*M_PI)*pow(kT_au, 1.5) / (Z_avg*pow(M_PI, 2)*cou_log);
+    double kappa_au = 40.0*sqrt(2*M_PI)*pow(kT_au, 2.5) / (Z_avg*pow(M_PI, 2)*cou_log);
+    std::vector<double> ref_invZ{ 0.0, 1.0/16.0, 1.0/4.0, 1.0/2.0, 1.0 };
+    std::vector<double> ref_gamma{1.0, 0.923, 0.785, 0.683, 0.582};
+    std::vector<double> ref_delta{1.0, 0.791, 0.513, 0.356, 0.225};
+    std::vector<double> ref_epsilon{0.4, 0.396, 0.401, 0.410, 0.419};
+    std::vector<double> invZ(1), gamma_E(1), delta_T(1), epsilon(1);
+    invZ[0] = 1.0 / Z_avg;
+    NaturalSplineInterpolation(invZ, gamma_E, ref_invZ, ref_gamma);
+    NaturalSplineInterpolation(invZ, delta_T, ref_invZ, ref_delta);
+    NaturalSplineInterpolation(invZ, epsilon, ref_invZ, ref_epsilon);
+    sigma_au *= gamma_E[0];
+    kappa_au *= delta_T[0] * epsilon[0];
+    //----------------------------------
+    const double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
+    const double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
+    double sigma = sigma_au * au2si_sigma;
+    double kappa = kappa_au * au2si_kappa;
+    cout<<std::left<<setw(20)<<"Spitzer"<<setw(20)<<sigma<<setw(20)<<kappa<<setw(20)<<kappa_au/sigma_au/kT_au<<endl;
+}
+
 void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density_e, const vector<double>& denlist_i, const vector<double>& zionlist)
 {
     // Hartree atomic unit
-    double kT = T_eV / Ha2eV;
-    double kTf = fermi_energy(density_e) / Ha2eV;
+    double kT_au = T_eV / Ha2eV;
+    double kTf_au = fermi_energy(density_e) / Ha2eV;
     double mu_kT = mu_eV / T_eV;
     double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
     //----------------------------------
@@ -78,34 +133,31 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     // beta = getA_beta(mu_kT);
     //----------------------------------
     double bmax,bmin;
-    double Debye = 4*M_PI* density_e_au/ sqrt(pow(kT,2) + pow(kTf,2));
-    bmin = M_PI/sqrt(3*kT);
+    double Debye = 4*M_PI* density_e_au/ sqrt(pow(kT_au,2) + pow(kTf_au,2));
+    bmin = M_PI/sqrt(3*kT_au);
     double tau_frac = 0;
     double density_i_tot_au = 0;
     for(int i = 0 ; i < denlist_i.size(); ++i)
     {
         double density_i_au = denlist_i[i] * pow(P_bohr*1e-8, 3);
-        Debye += 4*M_PI* density_i_au *pow(zionlist[i] ,2) / kT;
-        bmin = max(zionlist[i]/(3*kT), bmin);
+        Debye += 4*M_PI* density_i_au *pow(zionlist[i] ,2) / kT_au;
+        bmin = max(zionlist[i]/(3*kT_au), bmin);
         tau_frac += pow(zionlist[i],2) * density_i_au;
         density_i_tot_au += density_i_au;
     }
     bmax = max(sqrt(1.0/Debye), 2*pow(3.0/(4.0*M_PI*density_i_tot_au), 1.0/3.0));
     double cou_log = 1.0/2.0 * log(1.0 + pow(bmax/bmin, 2));
     cou_log = max(cou_log,2.0);
-    double tau = 1.0/tau_frac * 3.0 * pow(kT,3.0/2.0)/(2.0*sqrt(2.0)*M_PI*cou_log)*expmultiF12;
+    double tau = 1.0/tau_frac * 3.0 * pow(kT_au,3.0/2.0)/(2.0*sqrt(2.0)*M_PI*cou_log)*expmultiF12;
     //----------------------------------
     double sigma_au = density_e_au * tau * alpha;
-    double kappa_au = density_e_au * kT * tau * beta;
+    double kappa_au = density_e_au * kT_au * tau * beta;
     //----------------------------------
     const double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
     const double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
     double sigma = sigma_au * au2si_sigma;
     double kappa = kappa_au * au2si_kappa;
-    cout<<"Lee-More:"<<endl;
-    cout<<"electrical conductivity: "<<sigma<<" "<<yellow("Sm^-1")<<endl;
-    cout<<"thermal conductivity: "<<kappa<<" "<<yellow("W(mK)^-1")<<endl;
-    cout<<"Lorenz number: "<<kappa_au/sigma_au/kT<<endl;
+    cout<<std::left<<setw(20)<<"Lee-More"<<setw(20)<<sigma<<setw(20)<<kappa<<setw(20)<<kappa_au/sigma_au/kT_au<<endl;
 }
 
 void FUNC::Ichimaru(const double T_eV, const double mu_eV, const double density_e, 
