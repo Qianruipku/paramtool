@@ -29,7 +29,7 @@ void FUNC::conductivity()
     double density_e = den_mole * mol.avg_z; //unit cm^-3
     double mu_eV = FEG_mu(density_e, T_eV);
     cout<<"density: "<<density_e<<" "<<yellow("cm^-3")<<" ; temperature: "<<T_eV<<" "<<yellow("eV")<<endl;
-    cout<<"Fermi energy: "<<mu_eV<<" "<<yellow("eV")<<" ; Tf/T = "<<mu_eV/T_eV<<endl;
+    cout<<"Chemical potential: "<<mu_eV<<" "<<yellow("eV")<<" ; mu/T = "<<mu_eV/T_eV<<endl;
     cout<<"Ionization: "<<ionization*100<<"%"<<endl;
     // double  t(10), g(0.05);
     // cout<<pow(2/(3*M_PI*g*t),3)*4*(mol.avg_m/P_NA)/pow(P_bohr*1e-8, 3)<<" dd "<<2.0/(g*g*t*pow(9.0*M_PI/4, 2.0/3.0))*Ha2eV<<endl;
@@ -98,6 +98,13 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     double kTf_au = fermi_energy(density_e) / Ha2eV;
     double mu_kT = mu_eV / T_eV;
     double density_e_au = density_e*pow(P_bohr*1e-8, 3); 
+    //---------mean ionic charge---------
+    double Z_avg = 0;
+    for(int i = 0 ; i < denlist_i.size(); ++i)
+    {
+        Z_avg += denlist_i[i] * zionlist[i] * zionlist[i];
+    }
+    Z_avg /= density_e;
     //----------------------------------
     double alpha, beta;
     double F1_2;
@@ -141,9 +148,17 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     {
         double density_i_au = denlist_i[i] * pow(P_bohr*1e-8, 3);
         Debye += 4*M_PI* density_i_au *pow(zionlist[i] ,2) / kT_au;
-        bmin = max(zionlist[i]/(3*kT_au), bmin);
         tau_frac += pow(zionlist[i],2) * density_i_au;
         density_i_tot_au += density_i_au;
+    }
+    if(kT_au < kTf_au) //degenrate limit, bim = Ze^2/2E_F, E_F=3/2 kT_F
+    { 
+        // correction according to the description in the Lee-More paper.
+        bmin = Z_avg / sqrt(pow(3*kT_au,2) + pow(3*kTf_au, 2));
+    }
+    else
+    {
+        bmin = max(Z_avg/(3*kT_au), bmin);
     }
     bmax = max(sqrt(1.0/Debye), 2*pow(3.0/(4.0*M_PI*density_i_tot_au), 1.0/3.0));
     double cou_log = 1.0/2.0 * log(1.0 + pow(bmax/bmin, 2));
