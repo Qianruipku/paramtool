@@ -63,7 +63,7 @@ void FUNC:: spitzer(const double T_eV, const double mu_eV, const double density_
     {
         Lambda *= sqrt(4.2e5/T_K);
     }
-    if(Lambda < 1)
+    if(Lambda < 1 || density_e > 5e5*pow(T_K,3))
     {
         cout<<std::left<<setw(20)<<"Spitzer"<<setw(20)<<"---"<<setw(20)<<"---"<<setw(20)<<"---"<<endl;
         return;
