@@ -154,7 +154,8 @@ void FUNC:: lee_more(const double T_eV, const double mu_eV, const double density
     if(kT_au < kTf_au) //degenrate limit, bim = Ze^2/2E_F, E_F=3/2 kT_F
     { 
         // correction according to the description in the Lee-More paper.
-        bmin = Z_avg / sqrt(pow(3*kT_au,2) + pow(3*kTf_au, 2));
+        bmin = Z_avg / sqrt(pow(3*kT_au*exp(10*(kT_au/kTf_au-1)), 2) + pow(3*kTf_au, 2));
+        // bmin = Z_avg / 3*kTf_au;
     }
     else
     {

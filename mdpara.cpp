@@ -44,7 +44,7 @@ void FUNC::mdparameter()
 
 	double mu0_eV = fermi_energy(ne / pow(l_cm,3));
 	double degeneracy = temp / mu0_eV;
-	double coupling = mol0.avg_z / (2*WSr_bohr) / temp * Ha2eV;
+	double coupling = mol.avg_z / (2*WSr_bohr) / temp * Ha2eV;
 
 
 	int nbands1 = this->calbands(Ecut1_eV, mu0_eV, mol0.tot_z*nmol, ionization);
