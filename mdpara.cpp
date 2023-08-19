@@ -37,9 +37,9 @@ void FUNC::mdparameter()
 	double dt_au=dt_fs/(rau2s*1e15);
 	double mu_eV = FEG_mu(ne / pow(l_cm,3), temp);
 	double mu_Ry = mu_eV / Ry2eV;
-	double Ecut1_eV = FEG_ECUT1( mu_eV, temp);
+	double Ecut1_eV = FEG_ECUT1( mu_eV, temp, 1e-3);
 	double Ecut1_Ry = Ecut1_eV / Ry2eV;
-	double Ecut2_eV = FEG_ECUT2( mu_eV, temp);;
+	double Ecut2_eV = FEG_ECUT2( mu_eV, temp, 1e-5);;
 	double Ecut2_Ry = Ecut2_eV / Ry2eV;
 
 	double mu0_eV = fermi_energy(ne / pow(l_cm,3));
@@ -56,8 +56,8 @@ void FUNC::mdparameter()
 	cout<<"dt: "<<dt_fs<<yellow(" fs; ")<<dt_au<<yellow(" Ry^-1")<<endl;
 	cout<<"1/(40dt): "<<double(1.0)/40/dt_fs<<yellow(" fs^-1")<<endl;
 	cout<<"FEG mu: "<<setprecision(3)<<mu_eV<<yellow(" eV; ")<<mu_Ry<<yellow(" Ry")<<endl;
-	cout<<"Guess Ecut1 (interror < 1e-3): "<<Ecut1_eV<<yellow(" eV; ")<<Ecut1_Ry<<yellow(" Ry")<<endl;
-	cout<<"Guess Ecut2 (f<1e-5):          "<<Ecut2_eV<<yellow(" eV; ")<<Ecut2_Ry<<yellow(" Ry")<<endl;
+	cout<<"Guess Ecut1 (Delta N < 1e-3):   "<<Ecut1_eV<<yellow(" eV; ")<<Ecut1_Ry<<yellow(" Ry")<<endl;
+	cout<<"Guess Ecut2 (f or occ. < 1e-5): "<<Ecut2_eV<<yellow(" eV; ")<<Ecut2_Ry<<yellow(" Ry")<<endl;
 	cout<<"Ionization: "<<ionization*100<<"%"<<endl;
 	cout<<"Nbands1: "<<nbands1<<" ; Nbands2: "<<nbands2<<endl;
 	cout<<"Coupling constant: "<<coupling<<" ; Degeneracy parameter: "<<degeneracy<<endl;

@@ -85,7 +85,7 @@ double FUNC:: FEG_mu(const double density_e, const double T_eV)
     return pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV;
  }
 
-double FUNC:: FEG_ECUT1(double mu_eV, double T_eV)
+double FUNC:: FEG_ECUT1(double mu_eV, double T_eV, double thr)
 {
 	double ref = calint(funmu, mu_eV, T_eV, 1e-20);
 	double de = T_eV * 1e-4;
@@ -93,7 +93,7 @@ double FUNC:: FEG_ECUT1(double mu_eV, double T_eV)
 	double sum = funmu(0, mu_eV, T_eV);
 	double e = 0;
 	double diff = 1;
-	while(diff > 1e-3)
+	while(diff > thr)
 	{
 		e += de;
 		sum += 4 * funmu(e, mu_eV, T_eV);
@@ -103,9 +103,9 @@ double FUNC:: FEG_ECUT1(double mu_eV, double T_eV)
 	}
 	return e;
 }
-double FUNC:: FEG_ECUT2(double mu_eV, double T_eV)
+double FUNC:: FEG_ECUT2(double mu_eV, double T_eV, double thr)
 {
-    return mu_eV + 5*log(10.0)*T_eV;
+    return mu_eV - log(thr)*T_eV;
 }
 
 //4/3 * mu_0^(3/2) = \int_0^\infty \frac{e^(1/2)}{exp((e-mu)/kT)+1} de

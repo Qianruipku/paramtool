@@ -24,8 +24,8 @@ class FUNC
         //density_e: cm^-3
         double FEG_mu(const double density_e, const double T_eV);
         //estimate ECUT with FEG model
-        double FEG_ECUT1(double mu, double T);
-        double FEG_ECUT2(double mu, double T);
+        double FEG_ECUT1(double mu, double T, double thr);
+        double FEG_ECUT2(double mu, double T, double thr);
         //get nbands
         int calbands(double ecut_eV, double mu0_eV, double ne0, double ionization);
         
