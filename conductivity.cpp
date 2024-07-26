@@ -73,9 +73,9 @@ void FUNC:: spitzer(const double T_eV, const double mu_eV, const double density_
     double sigma_au = 4.0*sqrt(2*M_PI)*pow(kT_au, 1.5) / (Z_avg*pow(M_PI, 2)*cou_log);
     double kappa_au = 40.0*sqrt(2*M_PI)*pow(kT_au, 2.5) / (Z_avg*pow(M_PI, 2)*cou_log);
     std::vector<double> ref_invZ{ 0.0, 1.0/16.0, 1.0/4.0, 1.0/2.0, 1.0 };
-    std::vector<double> ref_gamma{1.0, 0.923, 0.785, 0.683, 0.582};
-    std::vector<double> ref_delta{1.0, 0.791, 0.513, 0.356, 0.225};
-    std::vector<double> ref_epsilon{0.4, 0.396, 0.401, 0.410, 0.419};
+    std::vector<double> ref_gamma{1.0, 0.9225, 0.7849, 0.6833, 0.5816};
+    std::vector<double> ref_delta{1.0, 0.7907, 0.5133, 0.3563, 0.2252};
+    std::vector<double> ref_epsilon{0.4, 0.3959, 0.4007, 0.4100, 0.4189};
     std::vector<double> invZ(1), gamma_E(1), delta_T(1), epsilon(1);
     invZ[0] = 1.0 / Z_avg;
     NaturalSplineInterpolation(invZ, gamma_E, ref_invZ, ref_gamma);
@@ -218,8 +218,8 @@ void FUNC::Ichimaru(const double T_eV, const double mu_eV, const double density_
     double sigma_au = 1 / rho_E;
     double kappa_au = 1 / rho_T;
     //----------------------------------
-    const double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
-    const double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
+    constexpr double au2si_sigma = hau2A * hau2A * hau2s / hau2J / hau2m;
+    constexpr double au2si_kappa = hau2J /(hau2s * hau2m * hau2K);
     double sigma = sigma_au * au2si_sigma;
     double kappa = kappa_au * au2si_kappa;
     cout<<"Ichimaru:"<<endl;

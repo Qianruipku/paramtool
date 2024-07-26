@@ -13,9 +13,9 @@ Temperature: 0.82318535 Ry; 129970.46068473 K
 dt: 0.04217410 fs; 0.87176699 Ry^-1
 1/(40dt): 0.59278091 fs^-1
 FEG mu: 26.613 eV; 1.956 Ry
-Guess Ecut1 (Delta N < 1e-3):   104.684 eV; 7.694 Ry
+Guess Ecut1 (Delta N < 1e-3):   77.325 eV; 5.683 Ry
 Guess Ecut2 (f or occ. < 1e-5): 155.558 eV; 11.433 Ry
 Ionization: 47.870%
-Nbands1: 327 ; Nbands2: 552
+Nbands1: 225 ; Nbands2: 552
 Coupling constant: 1.424 ; Degeneracy parameter: 0.366
 ---------------------------------------------------------

@@ -37,7 +37,7 @@ void FUNC::mdparameter()
 	double dt_au=dt_fs/(rau2s*1e15);
 	double mu_eV = FEG_mu(ne / pow(l_cm,3), temp);
 	double mu_Ry = mu_eV / Ry2eV;
-	double Ecut1_eV = FEG_ECUT1( mu_eV, temp, 1e-3);
+	double Ecut1_eV = FEG_ECUT1( mu_eV, temp, 1e-2);
 	double Ecut1_Ry = Ecut1_eV / Ry2eV;
 	double Ecut2_eV = FEG_ECUT2( mu_eV, temp, 1e-5);;
 	double Ecut2_Ry = Ecut2_eV / Ry2eV;

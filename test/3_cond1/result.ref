@@ -10,5 +10,5 @@ Chemical potential: -4348.15 eV ; mu/T = -4.34815
 Ionization: 95.4615%
 Coulomb-coupling parameter: 0.272196 ; Fermi-degeneracy parameter: 15.0595
 Model               Sigma(Sm^-1)                 Kappa(W(mK)^-1)              Lorentz number      
-Spitzer             6.44257e+07         1.54264e+07         2.77864             
+Spitzer             6.43905e+07         1.54149e+07         2.77808             
 Lee-More            8.337e+07           2.87255e+07         3.99839             
