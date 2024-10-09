@@ -243,6 +243,10 @@ double FUNC:: coupling_parameter(molecule &mol, const double T_eV, const double 
 double fd_integral(const double x, const double j)
 {
     double de, thr;
+    // if(x <= -10)
+    // {
+    //     return exp(x) * gamma(j+1);
+    // }
     if(x <= 30)
     {
         de = 1e-4;

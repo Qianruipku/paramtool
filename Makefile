@@ -10,6 +10,7 @@ OBJ=obj/main.o\
 	obj/elements.o\
 	obj/conductivity.o\
 	obj/chemical_potential.o\
+	obj/capacity.o\
 	obj/tool.o
 
 ifeq ($(TEST), ON)

@@ -1,6 +1,6 @@
 #include "function.h"
 #include "const.h"
-double getmu(double mu_0, double T);
+double getmu(double mu_0, double T, const double thr_factor = 1e-8);
 double calint(double fun(double e, double mu, double T), double mu, double T,double thr);
 double funmu(double e, double mu, double T);
 
@@ -64,11 +64,11 @@ double FUNC:: FEG_mu(const double density_e, const double T_eV)
 {
     double mu0_eV = fermi_energy(density_e);
     double mu_eV;
-    if(T_eV <= 1)
+    if(T_eV <= 1.01)
 	{
 		mu_eV = mu0_eV * (1 - pow(M_PI,2)/12.0*pow(T_eV/mu0_eV,2)-pow(M_PI,4)*7.0/960*pow(T_eV/mu0_eV,4));
 	}
-	else if(T_eV >= 1e4)
+	else if(T_eV >= 0.99e4)
 	{
 		mu_eV = T_eV*(-log(6*pow(M_PI,2)) + 1.5*log(4*M_PI*mu0_eV/T_eV));
 	}
@@ -79,11 +79,32 @@ double FUNC:: FEG_mu(const double density_e, const double T_eV)
     return mu_eV;
 }
 
- double FUNC::fermi_energy(const double density_e)
- {
+// double FUNC::FEG_dmudT(const double density_e, const double T_eV)
+// {
+// 	double mu0_eV = fermi_energy(density_e);
+// 	double dmudT;
+// 	if(T_eV <= 1.01)
+// 	{
+// 		dmudT = -pow(M_PI,2)/6.0*(T_eV/mu0_eV) - pow(M_PI,4)*7.0/240.0*pow(T_eV/mu0_eV,3);
+// 	}
+// 	else if(T_eV >= 0.99e4)
+// 	{
+// 		dmudT = -log(6*pow(M_PI,2)) + 1.5*log(4*M_PI*mu0_eV/T_eV) - 1.5;
+// 	}
+// 	else
+// 	{
+// 		double mu_eV1 = getmu(mu0_eV, T_eV*0.99);
+// 		double mu_eV2 = getmu(mu0_eV, T_eV*1.01);
+// 		dmudT = (mu_eV2 - mu_eV1) / (0.02 * T_eV);
+// 	}
+// 	return dmudT;
+// }
+
+double FUNC::fermi_energy(const double density_e)
+{
 	double density_e_bohr = density_e*pow(P_bohr*1e-8, 3);
-    return pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV;
- }
+  	return pow(3.0 * pow(M_PI,2) * density_e_bohr, 2.0/3.0) * Ry2eV;
+}
 
 double FUNC:: FEG_ECUT1(double mu_eV, double T_eV, double thr)
 {
@@ -109,7 +130,7 @@ double FUNC:: FEG_ECUT2(double mu_eV, double T_eV, double thr)
 }
 
 //4/3 * mu_0^(3/2) = \int_0^\infty \frac{e^(1/2)}{exp((e-mu)/kT)+1} de
-double getmu(double mu0, double T)
+double getmu(double mu0, double T, const double thr_factor)
 {
 	double ref = 2.0/3.0 * pow(mu0, 3.0/2.0);
 	double Deltamu = 5 * T;
@@ -133,7 +154,7 @@ double getmu(double mu0, double T)
     }
 	double diff = 1000;
 	double mu3, com3;
-	double thr = 1e-8 * ref;
+	double thr = thr_factor * ref;
 	while (diff > thr)
     {
         mu3 = (mu2 + mu1) / 2;

@@ -9,6 +9,7 @@ int main()
 	cout<<green("1: Unit convert")<<endl;
 	cout<<green("2: calculate MD parameter")<<endl;
 	cout<<green("3: calculate conductivities")<<endl;
+	cout<<green("4: calculate Cv")<<endl;
 	FUNC test;
 	cin>>func;
 	switch(func)
@@ -21,6 +22,9 @@ int main()
 			break;
 		case 3:
 			test.conductivity();
+			break;
+		case 4:
+			test.Cv();
 			break;
 		default:
 			cout<<red("Wrong Input!")<<endl;

@@ -1,0 +1,14 @@
+Please choose the tool 
+1: Unit convert
+2: calculate MD parameter
+3: calculate conductivities
+4: calculate Cv
+Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)
+Input the density (g/cm^3):
+Input the temperature (eV):
+58.3377
+58.221
+T1: 0.1998 T2: 0.2002
+E1: 0.7721392122 E2: 0.7721429428
+mu1: 11.65586523 mu2: 11.65585394
+Cv/N_i: 0.2537882976 k_b/atom

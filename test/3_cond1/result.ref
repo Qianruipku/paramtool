@@ -2,6 +2,7 @@ Please choose the tool
 1: Unit convert
 2: calculate MD parameter
 3: calculate conductivities
+4: calculate Cv
 Input the name of molecule (e.g. Mg-O, C-O-2, H-2-O)
 Input the density (g/cm^3):
 Input the temperature (eV):

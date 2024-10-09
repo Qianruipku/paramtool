@@ -63,6 +63,13 @@ class FUNC
                         const vector<double>& denlist_i, const vector<double>& zionlist);
         void Ichimaru(const double T_eV, const double mu_eV, const double density_e, 
                         const vector<double>& denlist_i, const vector<double>& zionlist);
+    
+    public:
+        // calculate Cv
+        void Cv();
+    private:
+        // calculate the energy of free electron gas
+        double FEG_E(const double density_e, const double density_i, const double T_eV, const double mu_eV);
         
 
     public:
