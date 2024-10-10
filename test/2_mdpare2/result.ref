@@ -18,5 +18,6 @@ Guess Ecut1 (Delta N < 1e-3):   17.886 eV; 1.315 Ry
 Guess Ecut2 (f or occ. < 1e-5): 22.945 eV; 1.686 Ry
 Ionization: 32.514%
 Nbands1: 1212 ; Nbands2: 1397
+E_TF: 17.201 eV; 1.264 Ry
 Coupling constant: 28.454 ; Degeneracy parameter: 0.029
 ---------------------------------------------------------

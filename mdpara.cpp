@@ -60,6 +60,7 @@ void FUNC::mdparameter()
 	cout<<"Guess Ecut2 (f or occ. < 1e-5): "<<Ecut2_eV<<yellow(" eV; ")<<Ecut2_Ry<<yellow(" Ry")<<endl;
 	cout<<"Ionization: "<<ionization*100<<"%"<<endl;
 	cout<<"Nbands1: "<<nbands1<<" ; Nbands2: "<<nbands2<<endl;
+	cout<<"E_TF: "<<mu0_eV<<yellow(" eV; ")<<mu0_eV/Ry2eV<<yellow(" Ry")<<endl;
 	cout<<"Coupling constant: "<<coupling<<" ; Degeneracy parameter: "<<degeneracy<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
 	return;
