@@ -52,6 +52,32 @@ void FUNC::thomas_fermi_ionization(const double density_gm, const double T_eV, c
 
     return;
 }
+
+/**
+ * @brief thomas fermi melting temperature
+   @cite Y. T. Lee and R. M. More, The Physics of Fluids 27, 1273 (1984)
+ * 
+ */
+double FUNC::thomas_fermi_melting(const double density_gm, const vector<double> &mlist, const vector<double> &zlist, const vector<double> &nlist)
+{
+	double m_per = 0, z_per = 0;
+	double n_per_mol = 0;
+	for(int i = 0 ; i < mlist.size(); ++i)
+	{
+		m_per += mlist[i] * nlist[i];
+		z_per += zlist[i] * nlist[i];
+		n_per_mol += nlist[i];
+	}
+	m_per /= n_per_mol;
+	z_per /= n_per_mol;
+
+	double b = 0.6 * pow(z_per, 1.0/9.0);
+	double xi = 9.0 * pow(z_per, 0.3) * density_gm / m_per;
+
+	double Tm_eV = 0.32 * pow(xi/(1.0+xi), 4) * pow(xi, 2*b-2.0/3.0);
+	return Tm_eV;
+}
+
 /**
  * @brief mu of free electrons
  * 		  mu0=P_hbar^2/2m*(3pi^2N/V)^(2/3)

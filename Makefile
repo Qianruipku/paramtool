@@ -27,7 +27,8 @@ install:
 	@if [ $(TEST) == OFF ]; then cp tool.exe $(BIN_PATH); fi
 	@if [ $(TEST) == ON ]; then cd test;./Autotest.sh ;cd ..; fi
 obj/%.o:%.cpp
+	@mkdir -p obj
 	$(CXX) $(OPTION) -c $< -o $@
 clean:
-	@ rm -rf obj/*
+	@ rm -rf obj
 	@ if [ ! -d tool.exe ]; then rm -rf tool.exe; fi 
